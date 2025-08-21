@@ -20,7 +20,7 @@ app.post('/upload', upload.single('image'), async (req, res) => {
 
   if (format) {
     format = format.toLowerCase();
-    if (!['jpg', 'jpeg', 'png'].includes(format)) {
+    if (!['jpg', 'jpeg', 'png','webp'].includes(format)) {
       format = originalExt;
     }
     if (format === 'jpeg') format = 'jpg';
@@ -39,6 +39,8 @@ app.post('/upload', upload.single('image'), async (req, res) => {
 
   if (format === 'png') {
     await image.png().toFile(filePath);
+  } else if (format === 'webp') {
+    await image.webp({ quality: 90 }).toFile(filePath);
   } else {
     await image.jpeg({ quality: 90 }).toFile(filePath);
   }
