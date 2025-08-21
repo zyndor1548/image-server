@@ -15,13 +15,20 @@ const upload = multer({ storage });
 app.post('/upload', upload.single('image'), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
 
-  let format = req.body.format || req.query.format || 'jpg';
-  format = format.toLowerCase();
-  if (!['jpg', 'jpeg', 'png'].includes(format)) format = 'jpg';
-  if (format === 'jpeg') format = 'jpg';
+  let format = req.body.format || req.query.format || null;
+  const originalExt = path.extname(req.file.originalname).slice(1).toLowerCase();
+
+  if (format) {
+    format = format.toLowerCase();
+    if (!['jpg', 'jpeg', 'png'].includes(format)) {
+      format = originalExt;
+    }
+    if (format === 'jpeg') format = 'jpg';
+  } else {
+    format = originalExt || 'jpg';
+  }
 
   const files = fs.readdirSync(uploadFolder).filter(f => /\.(jpg|jpeg|png)$/i.test(f));
-
   const numbers = files.map(f => parseInt(path.basename(f, path.extname(f)))).filter(n => !isNaN(n));
   const nextNumber = numbers.length > 0 ? Math.max(...numbers) + 1 : 1;
 
@@ -29,6 +36,7 @@ app.post('/upload', upload.single('image'), async (req, res) => {
   const filePath = path.join(uploadFolder, filename);
 
   const image = sharp(req.file.buffer);
+
   if (format === 'png') {
     await image.png().toFile(filePath);
   } else {
@@ -38,6 +46,8 @@ app.post('/upload', upload.single('image'), async (req, res) => {
   console.log(`uploaded ${filename}`);
   res.json({ filename });
 });
+
+
 
 app.use('/images', express.static(uploadFolder));
 
