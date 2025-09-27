@@ -228,7 +228,7 @@ class ZFrame {
             login: { title: 'Welcome to Z-Frame', subtitle: 'Secure image hosting and management' },
             dashboard: { title: 'Dashboard', subtitle: 'Overview of your account and images' },
             upload: { title: 'Upload Images', subtitle: 'Add new images to your vault' },
-            gallery: { title: 'My Images', subtitle: 'Browse and manage your uploaded images' }
+            gallery: { title: 'Frames', subtitle: 'Browse and manage your uploaded images' }
         };
 
         const { title, subtitle } = titles[section] || titles.login;
@@ -336,7 +336,7 @@ class ZFrame {
         const statusText = tokenStatus.querySelector('span:last-child');
         const revokeBtn = document.getElementById('revoke-token');
 
-        if (this.token) {
+        if (this.token && this.token.trim() !== '') {
             tokenInput.value = this.token;
             statusDot.classList.add('active');
             statusText.textContent = 'Active';
@@ -539,11 +539,13 @@ class ZFrame {
                 this.renderImages();
                 imageCount.textContent = `${this.userImages.length} image${this.userImages.length !== 1 ? 's' : ''}`;
             }
-            messageContainer.innerHTML = '';
             
         } catch (error) {
             console.error('Gallery load error:', error);
             this.showMessage(messageContainer, 'Failed to load images. Please try again.', 'error');
+        } finally {
+            // Always clear loading message
+            messageContainer.innerHTML = '';
         }
     }
 
