@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Z-Frame - Professional Image Server</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-image"></i>
+                    <span>Z-Frame</span>
+                </div>
+                <div class="creator-info">
+                    <span>by</span>
+                    <a href="https://github.com/zyndor1548" target="_blank" class="creator-link">
+                        <i class="fab fa-github"></i>
+                        zyndor1548
+                    </a>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav" id="sidebar-nav">
+                <div class="nav-item active" data-section="login">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Login</span>
+                </div>
+                <div class="nav-item hidden" data-section="dashboard">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item hidden" data-section="upload">
+                    <i class="fas fa-upload"></i>
+                    <span>Upload</span>
+                </div>
+                <div class="nav-item hidden" data-section="gallery">
+                    <i class="fas fa-images"></i>
+                    <span>My Images</span>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer" id="sidebar-footer">
+                <div class="user-profile hidden" id="user-profile">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <div class="username" id="sidebar-username"></div>
+                        <div class="user-role">User</div>
+                    </div>
+                    <button class="logout-btn" id="logout-btn" title="Logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-header">
+                <button class="sidebar-toggle" id="sidebar-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="header-title">
+                    <h1 id="page-title">Welcome to Z-Frame</h1>
+                    <p id="page-subtitle">Secure image hosting and management</p>
+                </div>
+            </div>
+
+            <!-- Login Section -->
+            <section id="login-section" class="content-section active">
+                <div class="auth-container">
+                    <div class="auth-card">
+                        <div class="auth-header">
+                            <h2>Sign In</h2>
+                            <p>Access your secure image vault</p>
+                        </div>
+                        <form id="login-form" class="auth-form">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <i class="fas fa-user"></i>
+                                    <input type="text" id="username" name="username" placeholder="Username" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <i class="fas fa-lock"></i>
+                                    <input type="password" id="password" name="password" placeholder="Password" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-full">
+                                <i class="fas fa-sign-in-alt"></i>
+                                Sign In
+                            </button>
+                        </form>
+                        <div id="login-message" class="message-container"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="content-section">
+                <div class="dashboard-grid">
+                    <div class="dashboard-card stats-card">
+                        <div class="card-icon">
+                            <i class="fas fa-images"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="total-images">0</h3>
+                            <p>Total Images</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card token-card">
+                        <div class="card-header">
+                            <h3>API Token</h3>
+                            <div class="token-status" id="token-status">
+                                <span class="status-dot"></span>
+                                <span>No Token</span>
+                            </div>
+                        </div>
+                        <div class="token-display" id="token-display">
+                            <input type="text" id="token-input" readonly placeholder="No token generated">
+                            <button class="btn btn-icon" id="copy-token" title="Copy Token">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <div class="token-actions">
+                            <button class="btn btn-secondary" id="generate-token">
+                                <i class="fas fa-key"></i>
+                                Generate New Token
+                            </button>
+                            <button class="btn btn-danger" id="revoke-token" disabled>
+                                <i class="fas fa-ban"></i>
+                                Revoke Token
+                            </button>
+                        </div>
+                        <div id="token-message" class="message-container"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Upload Section -->
+            <section id="upload-section" class="content-section">
+                <div class="upload-container">
+                    <div class="upload-card">
+                        <div class="upload-area" id="upload-area">
+                            <div class="upload-content">
+                                <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                                <h3>Drop your image here</h3>
+                                <p>or click to browse files</p>
+                                <input type="file" id="image-file" name="image" accept="image/*" hidden>
+                            </div>
+                        </div>
+                        
+                        <div class="upload-options">
+                            <div class="form-group">
+                                <label for="format">Output Format</label>
+                                <select id="format" name="format" class="form-select">
+                                    <option value="">Keep Original</option>
+                                    <option value="jpg">JPEG</option>
+                                    <option value="png">PNG</option>
+                                    <option value="webp">WebP</option>
+                                </select>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-upload" id="upload-btn" disabled>
+                                <i class="fas fa-upload"></i>
+                                Upload Image
+                            </button>
+                        </div>
+                        
+                        <div class="upload-progress hidden" id="upload-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill"></div>
+                            </div>
+                            <div class="progress-text">Uploading...</div>
+                        </div>
+                        
+                        <div id="upload-message" class="message-container"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Gallery Section -->
+            <section id="gallery-section" class="content-section">
+                <div class="gallery-header">
+                    <div class="gallery-title">
+                        <h2>My Images</h2>
+                        <span class="image-count" id="image-count">0 images</span>
+                    </div>
+                    <div class="gallery-actions">
+                        <button class="btn btn-secondary" id="refresh-gallery">
+                            <i class="fas fa-sync-alt"></i>
+                            Refresh
+                        </button>
+                        <div class="view-toggle">
+                            <button class="btn btn-icon active" data-view="grid" title="Grid View">
+                                <i class="fas fa-th"></i>
+                            </button>
+                            <button class="btn btn-icon" data-view="list" title="List View">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-container">
+                    <div id="image-gallery" class="image-gallery grid-view">
+                        <!-- Images will be loaded here -->
+                    </div>
+                    <div id="gallery-message" class="message-container"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Image Modal -->
+    <div id="image-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-filename"></h3>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img id="modal-image" src="" alt="">
+            </div>
+            <div class="modal-footer">
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" id="copy-url">
+                        <i class="fas fa-copy"></i>
+                        Copy URL
+                    </button>
+                    <button class="btn btn-secondary" id="download-image">
+                        <i class="fas fa-download"></i>
+                        Download
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

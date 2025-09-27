@@ -114,6 +114,63 @@ app.post('/create_user', async (req, res) => {
   }
 });
 
+// Get user's images
+app.get('/api/user-images', async (req, res) => {
+  try {
+    const { token } = req.query;
+    
+    if (!token) {
+      return res.status(401).json({ error: 'Token required' });
+    }
+
+    const tokenResult = await verifyToken(token);
+    if (tokenResult.status !== "success") {
+      return res.status(401).json({ error: "Invalid or expired token" });
+    }
+
+    const username = tokenResult.username;
+  
+    const images = [];
+    
+    for (let i = 1; i <= 100; i++) {
+      const extensions = ['jpg', 'png', 'webp'];
+      
+      for (const ext of extensions) {
+        const filename = `${i}.${ext}`;
+        const filePath = path.join(uploadFolder, filename);
+        
+        if (fs.existsSync(filePath)) {
+          const stats = fs.statSync(filePath);
+          images.push({
+            id: i,
+            filename: filename,
+            url: `/images/${filename}`,
+            size: stats.size,
+            uploadDate: stats.mtime,
+            extension: ext
+          });
+          break;
+        }
+      }
+    }
+
+    images.sort((a, b) => new Date(b.uploadDate) - new Date(a.uploadDate));
+    
+    res.json({
+      success: true,
+      images: images,
+      count: images.length,
+      username: username
+    });
+    
+  } catch (error) {
+    console.error('Error in /api/user-images:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.use(express.static('public'));
+
 app.use('/images', express.static(uploadFolder));
 
 app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));
