@@ -8,6 +8,7 @@ const { createUser, GetNewToken, verifyToken, log, Getids, IncrementImageId, Get
 const app = express();
 const PORT = 3000;
 const uploadFolder = 'image';
+const fallbackFilename = `0.png`; // this is the image which is shown when the requested image is not present
 if (!fs.existsSync(uploadFolder)) fs.mkdirSync(uploadFolder);
 
 const storage = multer.memoryStorage();
@@ -276,10 +277,13 @@ app.get('/image/:filename', (req, res) => {
 			return res.sendFile(path.resolve(filePath));
 		}
 	}
-
+	const fallbackPath = path.join(uploadFolder, fallbackFilename);
+	if (fs.existsSync(fallbackPath)) {
+		return res.sendFile(path.resolve(fallbackPath));
+	}
 	res.status(404).json({
 		success: false,
-		error: 'Image not found'
+		error: 'Image not found and no fallback available'
 	});
 });
 app.post('/api/login', async (req, res) => {

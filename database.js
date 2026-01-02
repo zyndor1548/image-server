@@ -160,7 +160,6 @@ function log(logdetails) {
 				console.error('Database error:', err);
 			}
 		});
-		console.log("ssssssssssssssssssssssssssssss");
 		stmt.finalize();
 	} catch (err) {
 		console.error('Error in log function:', err);

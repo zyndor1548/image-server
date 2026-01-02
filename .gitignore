@@ -1,4 +1,5 @@
 node_modules/
 .env
-.sqlite
-image/
+*.sqlite
+image/*
+!image/0.png
