@@ -563,27 +563,23 @@ class ZFrame {
 		this.userImages = [];
 
 		for (let i = 1; i <= 100; i++) {
-			const extensions = ['jpg', 'png', 'webp'];
+			try {
+				const imageUrl = `${this.apiBase}/image/${i}`;
+				const response = await fetch(imageUrl, { method: 'HEAD' });
 
-			for (const ext of extensions) {
-				try {
-					const imageUrl = `${this.apiBase}/image/${i}`;
-					const response = await fetch(imageUrl, { method: 'HEAD' });
-
-					if (response.ok) {
-						this.userImages.push({
-							id: i,
-							filename: `${i}.${ext}`,
-							url: `/image/${i}`,
-							size: 0,
-							uploadDate: new Date(),
-							extension: ext
-						});
-						break;
-					}
-				} catch (error) {
-					continue;
+				if (response.ok) {
+					this.userImages.push({
+						id: i,
+						filename: `${i}.${ext}`,
+						url: `/image/${i}`,
+						size: 0,
+						uploadDate: new Date(),
+						extension: ext
+					});
+					break;
 				}
+			} catch (error) {
+				continue;
 			}
 		}
 
