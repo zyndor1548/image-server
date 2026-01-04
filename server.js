@@ -279,7 +279,7 @@ app.get('/image/:filename', (req, res) => {
 	}
 	const fallbackPath = path.join(uploadFolder, fallbackFilename);
 	if (fs.existsSync(fallbackPath)) {
-		return res.sendFile(path.resolve(fallbackPath));
+		return res.status(404).sendFile(path.resolve(fallbackPath));
 	}
 	res.status(404).json({
 		success: false,

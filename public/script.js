@@ -285,8 +285,8 @@ class ZFrame {
 
 			this.showMessage(messageContainer, 'Login successful!', 'success');
 
-			this.loadUserStats();
-			this.updateTokenDisplay();
+			this.showAuthenticatedState();
+			this.navigateToSection('dashboard');
 		} catch (error) {
 			console.error('Login error:', error);
 			this.showMessage(messageContainer, 'Login failed. Please try again.', 'error');
